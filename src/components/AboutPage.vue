@@ -19,7 +19,7 @@
       </template>
     </b-navbar>
     <div class="container">
-      <h1 class="title">Home Page</h1>
+        <h1 class="title">About Page</h1>
         <!-- Content goes here -->
     </div>
   </div>
@@ -27,6 +27,6 @@
 
 <script>
 export default {
-  name: "HomePage",
+  name: "AboutPage",
 };
 </script>
