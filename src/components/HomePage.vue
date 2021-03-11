@@ -1,20 +1,6 @@
 <template>
   <div>
-    <b-navbar class="has-background-light" style="margin-bottom: 16px;">
-      <template #brand>
-        <b-navbar-item tag="router-link" :to="{ path: '/' }">
-          <img src="../assets/ekskul.png" alt="Ekskul Logo" />
-        </b-navbar-item>
-      </template>
-      <template #start>
-        <b-navbar-item tag="router-link" :to="{ path: '/' }">
-          Home
-        </b-navbar-item>
-        <b-navbar-item tag="router-link" :to="{ path: '/about' }">
-          About
-        </b-navbar-item>
-      </template>
-    </b-navbar>
+    <app-navbar></app-navbar>
     <div class="container">
       <h1 class="title">Home Page</h1>
       <!-- Content goes here -->
@@ -63,6 +49,8 @@
 </template>
 
 <script>
+import AppNavbar from './AppNavbar.vue';
+
 export default {
   data() {
     return {
@@ -85,6 +73,9 @@ export default {
     };
   },
   name: "HomePage",
+  components: {
+    AppNavbar,
+  },
   methods: {
     addClass() {
       let newClass = {
