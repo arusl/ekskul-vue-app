@@ -20,7 +20,13 @@
           </b-radio>
         </div>
       </b-field>
-      <b-button type="is-primary" expanded @click="addClass()">Add</b-button>
+      <b-button
+        type="is-primary"
+        expanded
+        @click="saveClass()"
+        :disabled="!isValid"
+        >Add</b-button
+      >
       <br />
       <b-collapse
         class="panel"
@@ -49,7 +55,8 @@
 </template>
 
 <script>
-import AppNavbar from './AppNavbar.vue';
+import AppNavbar from "./AppNavbar.vue";
+import { fbdb } from "../firebase";
 
 export default {
   data() {
@@ -58,35 +65,73 @@ export default {
       instructorName: "",
       classType: "free",
       isOpen: 0,
-      allClasses: [
-        {
-          className: "Introduction to Web Development",
-          instructorName: "Andre Rusli",
-          classType: "paid",
-        },
-        {
-          className: "Building a Solid Community",
-          instructorName: "Nathanael Pribady",
-          classType: "free",
-        },
-      ],
+      allClasses: [],
     };
   },
   name: "HomePage",
   components: {
     AppNavbar,
   },
+  computed: {
+    isValid() {
+      if (this.className == "" || this.instructorName == "") return false;
+      else return true;
+    },
+  },
   methods: {
+    saveClass() {
+      const loadingComponent = this.$buefy.loading.open();
+      let classData = {
+        className: this.className,
+        instructorName: this.instructorName,
+        classType: this.classType,
+      };
+      // Javascript Promise
+      fbdb
+        .ref("classes/")
+        .push(classData)
+        .then(() => {
+          this.className = "";
+          this.instructorName = "";
+          this.classType = "free";
+          loadingComponent.close();
+          this.$buefy.toast.open({
+            message: "Successfully added a new class!",
+            type: "is-success",
+          });
+        })
+        .catch(()=>{
+          loadingComponent.close();
+          this.$buefy.toast.open({
+            message: "Failed to add a new class!",
+            type: "is-danger",
+          });
+        });
+    },
+
     addClass() {
       let newClass = {
         className: this.className,
         instructorName: this.instructorName,
         classType: this.classType,
       };
-      this.allClasses.push(newClass);
-      this.className = "";
-      this.instructorName = "";
-      this.classType = "free";
+      //TODO: open loading controller
+      fbdb
+        .ref("classes/")
+        .push(newClass)
+        .then(() => {
+          //TODO: close loading controller
+          //TODO: create toast
+          this.className = "";
+          this.instructorName = "";
+          this.classType = "free";
+        })
+        .catch((err) => {
+          alert(err);
+          this.className = "";
+          this.instructorName = "";
+          this.classType = "free";
+        });
     },
   },
 };
