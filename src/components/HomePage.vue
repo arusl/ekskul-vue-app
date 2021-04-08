@@ -47,6 +47,12 @@
         <div class="card-content">
           <div class="content">
             Instructor: {{ c.instructorName }} ({{ c.classType }})
+            <b-button
+              @click="deleteClass(c.id)"
+              expanded
+              type="is-danger is-small is-outlined"
+              >Delete</b-button
+            >
           </div>
         </div>
       </b-collapse>
@@ -79,6 +85,12 @@ export default {
     },
   },
   methods: {
+    deleteClass(id) {
+      const dbref = fbdb.ref("classes/" + id);
+      dbref.remove().then(() => {
+        this.fetchClasses();
+      });
+    },
     saveClass() {
       const loadingComponent = this.$buefy.loading.open();
       let classData = {
@@ -99,8 +111,9 @@ export default {
             message: "Successfully added a new class!",
             type: "is-success",
           });
+          this.fetchClasses();
         })
-        .catch(()=>{
+        .catch(() => {
           loadingComponent.close();
           this.$buefy.toast.open({
             message: "Failed to add a new class!",
@@ -108,31 +121,24 @@ export default {
           });
         });
     },
-
-    addClass() {
-      let newClass = {
-        className: this.className,
-        instructorName: this.instructorName,
-        classType: this.classType,
-      };
-      //TODO: open loading controller
-      fbdb
-        .ref("classes/")
-        .push(newClass)
-        .then(() => {
-          //TODO: close loading controller
-          //TODO: create toast
-          this.className = "";
-          this.instructorName = "";
-          this.classType = "free";
-        })
-        .catch((err) => {
-          alert(err);
-          this.className = "";
-          this.instructorName = "";
-          this.classType = "free";
+    fetchClasses() {
+      this.allClasses = [];
+      const dbref = fbdb.ref("classes/");
+      dbref.once("value", (snapshot) => {
+        snapshot.forEach((childSnapshot) => {
+          var childKey = childSnapshot.key;
+          var childData = childSnapshot.val();
+          let kelas = {
+            id: childKey,
+            ...childData,
+          };
+          this.allClasses.push(kelas);
         });
+      });
     },
+  },
+  created() {
+    this.fetchClasses();
   },
 };
 </script>
