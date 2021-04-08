@@ -2,22 +2,24 @@
 
 Open your computer terminal then run the following commands:
 
-## Clone this repository to your local computer
+1. Clone this repository to your local computer
 ```
 git clone https://github.com/arusl/ekskul-vue-app.git
 ```
 
-## Move to the newly cloned/downloaded project
+2. Move to the newly cloned/downloaded project
 ```
 cd ekskul-vue-app
 ```
 
-## Project setup
+3. Project setup
 ```
 npm install
 ```
 
-### Compiles and hot-reloads for development
+4. Compiles and hot-reloads for development
 ```
 npm run serve
 ```
+
+5. Open your browser and access localhost:8080 to view the running web application
